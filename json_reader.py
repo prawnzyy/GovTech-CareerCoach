@@ -7,8 +7,8 @@ class Json_Reader():
         self.url = url
         self.urllib_url = urllib.request.urlopen(url)
 
-        data = json.load(self.urllib_url)
-        self.restaurant_df = pd.json_normalize(data, record_path=['restaurants'])
+        self.data = json.load(self.urllib_url)
+        self.restaurant_df = pd.json_normalize(self.data, record_path=['restaurants'])
 
         # Read the unflattened one
         self.df = pd.read_json(url)
@@ -17,8 +17,8 @@ class Json_Reader():
         self.url = url
         self.urllib_url = urllib.request.urlopen(url)
 
-        data = json.load(self.urllib_url)
-        self.restaurant_df = pd.json_normalize(data, record_path=['restaurants'])
+        self.data = json.load(self.urllib_url)
+        self.restaurant_df = pd.json_normalize(self.data, record_path=['restaurants'])
 
         # Read the unflattened one
         self.df = pd.read_json(url)
