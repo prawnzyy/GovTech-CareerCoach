@@ -4,10 +4,19 @@ import pandas as pd
 
 from excel_reader import Excel_Reader
 from json_reader import Json_Reader
+from csv_writer import CSV_Writer
 
 def main(res_data, country_data):
 
+    # Misc Setup
+    writer = CSV_Writer("restaurant_details.csv")
+
     # Question 1
+
+    """
+    Assumptions made:
+    1. The country code in the country list excel is equal to the country id in the restaurant json
+    """
 
     # Open the CSV file
     res_df = res_data.get_restaurant_df()
@@ -17,15 +26,21 @@ def main(res_data, country_data):
     mask = res_df["restaurant.location.country_id"].isin(country_df["Country Code"])
     res_df = res_df[mask]
     res_df = pd.merge(left=res_df, right=country_df, left_on="restaurant.location.country_id", right_on="Country Code")
-    # print(res_df.columns.to_list())
     
     # Write all the rows into the csv file
-    to_write = res_df[[
+    writer.write(res_df, [
         "restaurant.id", "restaurant.name", "Country", "restaurant.location.city", 
-        "restaurant.user_rating.votes", "restaurant.user_rating.aggregate_rating", "restaurant.zomato_events"]].copy()
-    to_write.to_csv("restaurant_details.csv", index=False)
+        "restaurant.user_rating.votes", "restaurant.user_rating.aggregate_rating", "restaurant.zomato_events"])
 
     # Question 2
+
+    """
+    Assumptions made:
+    1. All the events that each restaurant has is to be split separately and are not related
+    2. The only events come from the zomato events
+    3. Events that happen either in april or have events that go through april are added
+    4. Only restaurants that have their country id in the country excel are being used
+    """
     
     # First obtain all events from the restaurants that have events
     events = res_df[["restaurant.id", "restaurant.name", "restaurant.zomato_events"]].dropna()
@@ -46,9 +61,9 @@ def main(res_data, country_data):
     events = pd.concat([events.drop(columns="restaurant.zomato_events"), zomato], axis = 1)
 
     # Write out to CSV
-    to_write = events[["event.event_id", "restaurant.id", "restaurant.name", 
-                       "photo_urls", "event.title", "event.start_date", "event.end_date"]].copy()
-    to_write.to_csv("restaurant_events.csv", index=False)
+    writer.set_file("restaurant_events.csv")
+    writer.write(events, ["event.event_id", "restaurant.id", "restaurant.name", 
+                        "photo_urls", "event.title", "event.start_date", "event.end_date"])
 
     # Question 3
 
