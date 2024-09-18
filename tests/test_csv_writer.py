@@ -1,4 +1,5 @@
 import unittest
+import os
 
 import pandas as pd
 
@@ -29,3 +30,9 @@ class TestCSVWriter(unittest.TestCase):
         self.writer.write(df)
         new_df = pd.read_csv("Test.csv")
         pd.testing.assert_frame_equal(df, new_df)
+
+    def tearDown(self):
+        # Remove the test CSV file after test runs
+        name = self.writer.get_file()
+        if os.path.exists(name):
+            os.remove(name)
