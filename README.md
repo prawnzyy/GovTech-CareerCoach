@@ -3,7 +3,7 @@ Techincal Assessment for GovTech CareerCoach Data Engineer
 
 Running the code locally
 1. From the command line at the root directory of the project, run the following command `python .\src\main.py`.
-Alternatively, just running main.py from an IDE such as VScode will work.
+Alternatively, just running `main.py` from an IDE such as VScode will work.
 2. The CSV files will be generated at the root of the project.
 
 For running unittest
